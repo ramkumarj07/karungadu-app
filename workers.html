@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-box">
+
+    <h2>👨‍🌾 Workers</h2>
+
+    <div class="worker-box">
+      <ul id="workerList"></ul>
+    </div>
+
+    <button onclick="addWorker()">➕ Add Worker</button>
+    <button onclick="goBack()">⬅ Back</button>
+
+  </div>
+</div>
+
+<script>
+function loadWorkers() {
+  let workers = JSON.parse(localStorage.getItem("workers")) || [];
+  let list = document.getElementById("workerList");
+  list.innerHTML = "";
+
+  workers.forEach((w, i) => {
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      <span>${w.name} - ₹${w.salary} - ${w.date}</span>
+      <button class="delete-btn" onclick="deleteWorker(${i})">❌</button>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+function addWorker() {
+  let name = prompt("Enter name:");
+  let salary = prompt("Enter salary:");
+  let date = new Date().toLocaleDateString();
+
+  if (name && salary) {
+    let workers = JSON.parse(localStorage.getItem("workers")) || [];
+    workers.push({ name, salary, date });
+    localStorage.setItem("workers", JSON.stringify(workers));
+    loadWorkers();
+  }
+}
+
+function deleteWorker(i) {
+  let workers = JSON.parse(localStorage.getItem("workers")) || [];
+  workers.splice(i, 1);
+  localStorage.setItem("workers", JSON.stringify(workers));
+  loadWorkers();
+}
+
+function goBack() {
+  window.location.href = "dashboard.html";
+}
+
+window.onload = loadWorkers;
+</script>
+
+</body>
+</html>

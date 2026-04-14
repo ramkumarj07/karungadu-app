@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-box">
+
+    <h2>🌾 Karungadu Farm</h2>
+
+    <button onclick="goToWorkers()">👨‍🌾 Workers</button>
+    <button onclick="goToSteps()">🚶 Steps</button>
+    <button onclick="goToRent()">🏠 House Rent</button>
+    <button onclick="logout()">🚪 Logout</button>
+
+  </div>
+</div>
+
+<script>
+function goToWorkers() {
+  window.location.href = "workers.html";
+}
+
+function goToSteps() {
+  window.location.href = "steps.html";
+}
+
+function goToRent() {
+  window.location.href = "rent.html";
+}
+
+function logout() {
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

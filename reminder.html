@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reminder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard">
+  <h2>⏰ Reminder</h2>
+
+  <input type="text" id="text" placeholder="Reminder name">
+  <input type="time" id="time">
+
+  <button onclick="setReminder()">Set Reminder</button>
+  <button onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+function setReminder() {
+  let text = document.getElementById("text").value;
+  let time = document.getElementById("time").value;
+
+  if (text && time) {
+    alert("Reminder Set 🔔");
+
+    setInterval(() => {
+      let now = new Date();
+      let current = now.getHours() + ":" + now.getMinutes();
+
+      if (current === time) {
+        alert("Reminder: " + text);
+      }
+    }, 1000);
+  }
+}
+
+function goBack() {
+  window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>

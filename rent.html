@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rent</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-box">
+
+    <h2>🏠 House Rent</h2>
+
+    <input type="number" id="amount" placeholder="Enter amount">
+    <input type="date" id="date">
+
+    <button onclick="addRent()">➕ Add Rent</button>
+
+    <div class="worker-box">
+      <ul id="rentList"></ul>
+    </div>
+
+    <button onclick="goBack()">⬅ Back</button>
+
+  </div>
+</div>
+
+<script>
+function loadRent() {
+  let rents = JSON.parse(localStorage.getItem("rents")) || [];
+  let list = document.getElementById("rentList");
+  list.innerHTML = "";
+
+  rents.forEach((r, i) => {
+    let li = document.createElement("li");
+
+    li.innerHTML = `
+      <span>₹${r.amount} - ${r.date}</span>
+      <button class="delete-btn" onclick="deleteRent(${i})">❌</button>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+function addRent() {
+  let amount = document.getElementById("amount").value;
+  let date = document.getElementById("date").value;
+
+  if (amount && date) {
+    let rents = JSON.parse(localStorage.getItem("rents")) || [];
+    rents.push({ amount, date });
+    localStorage.setItem("rents", JSON.stringify(rents));
+    loadRent();
+  }
+}
+
+function deleteRent(i) {
+  let rents = JSON.parse(localStorage.getItem("rents")) || [];
+  rents.splice(i, 1);
+  localStorage.setItem("rents", JSON.stringify(rents));
+  loadRent();
+}
+
+function goBack() {
+  window.location.href = "dashboard.html";
+}
+
+window.onload = loadRent;
+</script>
+
+</body>
+</html>

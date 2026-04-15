@@ -11,9 +11,7 @@
             background: #f5f5f5;
         }
 
-        h2 {
-            text-align: center;
-        }
+        h2 { text-align: center; }
 
         .box {
             background: white;
@@ -29,13 +27,14 @@
         }
 
         button {
-            padding: 10px;
+            padding: 12px;
             width: 100%;
             margin-top: 10px;
             background: green;
             color: white;
             border: none;
             border-radius: 8px;
+            font-size: 16px;
         }
 
         .delete {
@@ -43,19 +42,19 @@
             width: auto;
             padding: 5px 10px;
             float: right;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-<h2>👨‍🌾 Workers</h2>
+<h2>👨‍🌾 Workers Management</h2>
 
 <div class="box">
     <input type="text" id="name" placeholder="Worker Name">
     <input type="number" id="salary" placeholder="Salary">
     <input type="date" id="date">
 
-    <!-- 🔥 BUTTON WITHOUT onclick -->
     <button id="addBtn">Add Worker</button>
 </div>
 
@@ -63,64 +62,78 @@
 
 <button onclick="goBack()">⬅ Back</button>
 
-<script>
+<script type="module">
 
-let workers = JSON.parse(localStorage.getItem("workers")) || [];
+// 🔥 IMPORT FIREBASE
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ✅ ADD WORKER FUNCTION
+// 🔥 YOUR CONFIG (ALREADY CORRECT)
+const firebaseConfig = {
+  apiKey: "AIzaSyDmgXoFjV02ovknKLS95_Tnf1M9ycCfazk",
+  authDomain: "senthilapp-45706.firebaseapp.com",
+  databaseURL: "https://senthilapp-45706-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "senthilapp-45706",
+  storageBucket: "senthilapp-45706.firebasestorage.app",
+  messagingSenderId: "345379579967",
+  appId: "1:345379579967:web:01021c180652a6d6aab08a",
+  measurementId: "G-RT5XCT5RLC"
+};
+
+// 🔥 INIT
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const workersRef = ref(db, "workers");
+
+// 🔥 ADD WORKER
 function addWorker() {
     let name = document.getElementById("name").value;
     let salary = document.getElementById("salary").value;
     let date = document.getElementById("date").value;
 
-    if (name === "" || salary === "" || date === "") {
+    if (!name || !salary || !date) {
         alert("Fill all fields");
         return;
     }
 
-    workers.push({ name, salary, date });
-    localStorage.setItem("workers", JSON.stringify(workers));
+    push(workersRef, { name, salary, date });
 
-    display();
-
-    // clear inputs
     document.getElementById("name").value = "";
     document.getElementById("salary").value = "";
     document.getElementById("date").value = "";
 }
 
-// ✅ DISPLAY FUNCTION
-function display() {
+// 🔥 DISPLAY DATA (REALTIME)
+onValue(workersRef, (snapshot) => {
     let list = document.getElementById("list");
     list.innerHTML = "";
 
-    workers.forEach((w, i) => {
+    snapshot.forEach((child) => {
+        let data = child.val();
+        let key = child.key;
+
         list.innerHTML += `
             <div class="box">
-                <b>${w.name}</b> - ₹${w.salary} - ${w.date}
-                <button class="delete" onclick="deleteWorker(${i})">X</button>
+                <b>${data.name}</b> - ₹${data.salary} - ${data.date}
+                <button class="delete" onclick="deleteWorker('${key}')">X</button>
             </div>
         `;
     });
+});
+
+// 🔥 DELETE
+window.deleteWorker = function(key) {
+    remove(ref(db, "workers/" + key));
 }
 
-// ✅ DELETE
-function deleteWorker(i) {
-    workers.splice(i, 1);
-    localStorage.setItem("workers", JSON.stringify(workers));
-    display();
-}
+// 🔥 BUTTON FIX (IMPORTANT FOR MOBILE)
+document.getElementById("addBtn").addEventListener("click", addWorker);
 
-// ✅ BACK
+// 🔙 BACK
 function goBack() {
     window.location.href = "dashboard.html";
 }
-
-// 🔥 IMPORTANT FIX (EVENT LISTENER)
-document.getElementById("addBtn").addEventListener("click", addWorker);
-
-// LOAD DATA
-display();
 
 </script>
 

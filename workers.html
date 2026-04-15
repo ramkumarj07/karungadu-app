@@ -60,15 +60,15 @@
 
 <div id="list"></div>
 
-<button onclick="goBack()">⬅ Back</button>
+<button id="backBtn">⬅ Back</button>
 
 <script type="module">
 
-// 🔥 IMPORT FIREBASE
+// 🔥 IMPORT
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// 🔥 YOUR CONFIG (ALREADY CORRECT)
+// 🔥 CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDmgXoFjV02ovknKLS95_Tnf1M9ycCfazk",
   authDomain: "senthilapp-45706.firebaseapp.com",
@@ -83,10 +83,9 @@ const firebaseConfig = {
 // 🔥 INIT
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 const workersRef = ref(db, "workers");
 
-// 🔥 ADD WORKER
+// 🔥 ADD
 function addWorker() {
     let name = document.getElementById("name").value;
     let salary = document.getElementById("salary").value;
@@ -104,7 +103,7 @@ function addWorker() {
     document.getElementById("date").value = "";
 }
 
-// 🔥 DISPLAY DATA (REALTIME)
+// 🔥 DISPLAY
 onValue(workersRef, (snapshot) => {
     let list = document.getElementById("list");
     list.innerHTML = "";
@@ -127,13 +126,16 @@ window.deleteWorker = function(key) {
     remove(ref(db, "workers/" + key));
 }
 
-// 🔥 BUTTON FIX (IMPORTANT FOR MOBILE)
-document.getElementById("addBtn").addEventListener("click", addWorker);
+// 🔥 FINAL FIX (LOAD AFTER DOM READY)
+window.onload = function() {
 
-// 🔙 BACK
-function goBack() {
-    window.location.href = "dashboard.html";
-}
+    document.getElementById("addBtn").addEventListener("click", addWorker);
+
+    document.getElementById("backBtn").addEventListener("click", function() {
+        window.location.href = "dashboard.html";
+    });
+
+};
 
 </script>
 
